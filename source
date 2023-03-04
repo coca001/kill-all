@@ -1,0 +1,41 @@
+local function GetClosest()
+		local Character = game.Players.LocalPlayer.Character
+		local HumanoidRootPart = Character and Character:FindFirstChild("HumanoidRootPart")
+		if not (Character or HumanoidRootPart) then
+			return
+		end
+
+		local TargetDistance = math.huge
+		local Target
+
+		for i, v in ipairs(game.Players:GetPlayers()) do
+			if
+				v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") and
+				v.Character:FindFirstChild("Sword") or
+				v.Backpack:FindFirstChild("Sword")
+			then
+				local TargetHRP = v.Character.HumanoidRootPart
+				local mag = (HumanoidRootPart.Position - TargetHRP.Position).magnitude
+				if mag < TargetDistance then
+					TargetDistance = mag
+					Target = v
+				end
+			end
+		end
+
+		return Target
+	end
+
+	while true do
+		if game.Players.LocalPlayer.Backpack:FindFirstChild("Sword") then
+			game.Players.LocalPlayer.Backpack:FindFirstChild("Sword").Parent =
+				game.Players.LocalPlayer.Character
+		end
+		if game.Players.LocalPlayer.Character:FindFirstChild("Sword") then
+			game.Players.LocalPlayer.Character:FindFirstChild("Sword"):Activate()
+		end
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+			GetClosest().Character.HumanoidRootPart.CFrame - Vector3.new(0, 5.3, 0) +
+			GetClosest().Character.HumanoidRootPart.CFrame.lookVector * -4.005
+		wait()
+end
